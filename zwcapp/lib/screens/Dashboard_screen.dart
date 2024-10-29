@@ -1,25 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:zwcapp/screens/Comanies_locations.dart';
+import 'package:zwcapp/screens/Sections_Screen.dart';
 import 'package:zwcapp/screens/customwidgets.dart';
 
-// Icon paths
-List<String> iconPaths = [
-  "assets/images/camera_icon.png",
-  "assets/images/calculator.png",
-  "assets/images/camera_icon.png",
-  "assets/images/camera_icon.png",
-  "assets/images/camera_icon.png",
-  "assets/images/camera_icon.png",
-];
-
-// Text list
-List<String> iconTexts = [
-  "Capture Images",
-  "Calculations",
-  "Capture Images",
-  "Capture Images",
-  "Capture Images",
-  "Capture Images",
-];
+import '../Model/All_comaniesdata.dart';
+import '../services/Companies_services.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -29,277 +14,180 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  Getallcompaniesmodel? _AssignedCompanies;
+  bool _isLoading = true; // Loading state
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchCompanydata();
+  }
+
+  // Get all companies data
+  Future<void> _fetchCompanydata() async {
+    CompaniesServices profileService = CompaniesServices();
+    try {
+      Getallcompaniesmodel? profile = await profileService.Gerallcompanies();
+      setState(() {
+        _AssignedCompanies = profile; // Update state with profile data
+        _isLoading = false; // Set loading to false once data is fetched
+      });
+    } catch (error) {
+      // Handle error if needed
+      setState(() {
+        _isLoading = false; // Stop loading on error
+      });
+      print("Error fetching companies data: $error");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-
-          preferredSize: Size.fromHeight(60),
-          child: dashboard_appbar(name: "ZWC", iconpath: "assets/images/profile_image.png", context: context)
+        preferredSize: const Size.fromHeight(63),
+        child: dashboard_appbar(name: "ZWC", iconpath: "assets/images/profile_image.png", context: context),
       ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        color: Colors.white, // Set the background color for the entire page
-        child: SafeArea(
+      body: Stack(
+        children: [
+          // Background Image
+          SizedBox.expand(
+            child: Image.asset(
+              'assets/images/dashboard_background.png',
+              fit: BoxFit.fill,
+            ),
+          ),
 
-          child: Padding(
-            padding: const EdgeInsets.only(left: 14, right: 14),
+          // Positioned Container with scrollable list
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 5),
-                  // Company logo and profile
-
-                  SizedBox(height: 20),
-                  Container(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left:5),
-                          child: Textpoppins400_16(
-                            fontsize: 20,
-                            text: "Hi ,",
-                            fontweight: FontWeight.w500,
-                            color: Colors.black
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: Textpoppins400_16(
-                            fontsize: 20,
-                            text: "Nimit Shekhawat",
-                            fontweight: FontWeight.w500,
-                            color: Colors.black
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 27),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 6),
+                      child: TextpoppinsExtraBold_18(
+                        text: "Assigned Companies",
                         color: Colors.black,
-                        width: 1.5,
+                        textalign: TextAlign.start,
+                        fontsize: 20,
                       ),
-                      color: Colors.green[50],
-                      // color: Color(0xFFDCF9DF),
-                      borderRadius: BorderRadius.circular(12)
                     ),
-                    height: 240,
-                    child: GridView.count(
-                      crossAxisCount: 3, // Number of columns
-                      mainAxisSpacing: 10, // Space between rows
-                      crossAxisSpacing: 30,
-                      children: List.generate(iconPaths.length, (index) {
-                        return iconandtext(
-                          icon_image: iconPaths[index],
-                          icon_text: iconTexts[index],
-                        );
-                      }),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Textpoppins400_16(
-                    fontsize: 19,
-                    text: "About Me",
-                    color: Colors.black,
-                    fontweight: FontWeight.w600,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 90,
-                    width: double.infinity,
+                    const SizedBox(height: 20),
 
-                    decoration:BoxDecoration(
-                      color: Colors.brown[100],
-                      border: Border.all(
-                        color: Colors.black12
+                    // Show loading indicator or companies list
+                    if (_isLoading)
+                      Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    else
+                      ListView.builder(
+                        shrinkWrap: true, // Makes the ListView take only the needed height
+                        physics: NeverScrollableScrollPhysics(), // Disables scrolling for the ListView
+                        itemCount: _AssignedCompanies?.data.length ?? 0,
+                        itemBuilder: (context, index) {
+                          var company = _AssignedCompanies?.data[index];
+                          return Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => CompaniesLocation(userid: company!.id)),
+                                );
+                              },
+                              child: Container(
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      spreadRadius: 1,
+                                      blurRadius: 1,
+                                      color: Colors.black12,
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 14, top: 2, bottom: 5),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            TextpoppinsExtraBold_18(
+                                              text: company!.companyName,
+                                              fontsize: 15.5,
+                                              color: Colors.black,
+                                              maxline: 2,
+                                              textoverflow: TextOverflow.ellipsis,
+                                            ),
+                                            SizedBox(height: 4.5),
+                                            TextpoppinsMedium_16(
+                                              text: "Place: " + company.companyCity,
+                                              fontsize: 14,
+                                              color: Colors.black54,
+                                              maxline: 1,
+                                              textoverflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      width: 63,
+                                      decoration: const BoxDecoration(
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(16),
+                                          bottomRight: Radius.circular(16),
+                                        ),
+                                      ),
+                                      child: Stack(
+                                        children: [
+                                          ClipRRect(
+                                            borderRadius: const BorderRadius.only(
+                                              topRight: Radius.circular(16),
+                                              bottomRight: Radius.circular(16),
+                                            ),
+                                            child: Image.asset(
+                                              "assets/images/green_btn_bg.png",
+                                              fit: BoxFit.fitWidth,
+                                            ),
+                                          ),
+                                          Positioned(
+                                            left: 25,
+                                            top: 28,
+                                            child: Container(
+                                              height: 20,
+                                              width: 16,
+                                              child: Image.asset("assets/images/right_btn_arrow.png"),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                      borderRadius: BorderRadius.circular(12)
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment:CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10,top: 5),
-                          child: Textpoppins400_16(fontsize: 22, text: "Today's Score",color: Colors.brown,textalign: TextAlign.left),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10,right: 10,top: 5),
-                          child: Row(
-                            children: [
-                              Textpoppins400_16(fontsize: 25, text: "71 %",color: Colors.black,fontweight: FontWeight.w600),
-                              SizedBox(width: 10,),
-
-                              Icon(Icons.check_circle,color: Colors.black,size: 30,),
-                              SizedBox(width: 90,),
-                              Textpoppins400_16(fontsize: 25, text: "29%",color: Colors.black,fontweight: FontWeight.w600),
-                              SizedBox(width: 4,),
-                              Icon(Icons.close,color: Colors.black,size: 30,),
-                              SizedBox(width: 4,),
-                            ],
-                          ),
-                        ),
-
-
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 90,
-                    width: double.infinity,
-
-                    decoration:BoxDecoration(
-                        color: Colors.brown[100],
-                        border: Border.all(
-                            color: Colors.black12
-                        ),
-                        borderRadius: BorderRadius.circular(12)
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment:CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10,top: 5),
-                          child: Textpoppins400_16(fontsize: 22, text: "Today's Score",color: Colors.brown,textalign: TextAlign.left),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10,right: 10,top: 5),
-                          child: Row(
-                            children: [
-                              Textpoppins400_16(fontsize: 25, text: "71 %",color: Colors.black,fontweight: FontWeight.w600),
-                              SizedBox(width: 10,),
-
-                              Icon(Icons.check_circle,color: Colors.black,size: 30,),
-                              SizedBox(width: 90,),
-                              Textpoppins400_16(fontsize: 25, text: "29%",color: Colors.black,fontweight: FontWeight.w600),
-                              SizedBox(width: 4,),
-                              Icon(Icons.close,color: Colors.black,size: 30,),
-                              SizedBox(width: 4,),
-                            ],
-                          ),
-                        ),
-
-
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Textpoppins400_16(
-                    fontsize: 19,
-                    text: "News",
-                    color: Colors.black,
-                    fontweight: FontWeight.w600,
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 90,
-                    width: double.infinity,
-
-                    decoration:BoxDecoration(
-                        color: Colors.deepPurpleAccent[100],
-                        border: Border.all(
-                            color: Colors.black12
-                        ),
-                        borderRadius: BorderRadius.circular(12)
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment:CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10,top: 5),
-                          child: Textpoppins400_16(fontsize: 22, text: "Today's Score",color: Colors.white,textalign: TextAlign.left),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10,right: 10,top: 5),
-                          child: Row(
-                            children: [
-                              Textpoppins400_16(fontsize: 25, text: "71 %",color: Colors.black,fontweight: FontWeight.w600),
-                              SizedBox(width: 10,),
-
-                              Icon(Icons.check_circle,color: Colors.black,size: 30,),
-                              SizedBox(width: 90,),
-                              Textpoppins400_16(fontsize: 25, text: "29%",color: Colors.black,fontweight: FontWeight.w600),
-                              SizedBox(width: 4,),
-                              Icon(Icons.close,color: Colors.black,size: 30,),
-                              SizedBox(width: 4,),
-                            ],
-                          ),
-                        ),
-
-
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Container(
-                    height: 90,
-                    width: double.infinity,
-
-                    decoration:BoxDecoration(
-                        color: Color(0xFFb9b26c),
-                        border: Border.all(
-                            color: Colors.black12
-                        ),
-                        borderRadius: BorderRadius.circular(12)
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment:CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10,top: 5),
-                          child: Textpoppins400_16(fontsize: 22, text: "Today's Score",color: Colors.white,textalign: TextAlign.left),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10,right: 10,top: 5),
-                          child: Row(
-                            children: [
-                              Textpoppins400_16(fontsize: 25, text: "71 %",color: Colors.black,fontweight: FontWeight.w600),
-                              SizedBox(width: 10,),
-
-                              Icon(Icons.check_circle,color: Colors.black,size: 30,),
-                              SizedBox(width: 90,),
-                              Textpoppins400_16(fontsize: 25, text: "29%",color: Colors.black,fontweight: FontWeight.w600),
-                              SizedBox(width: 4,),
-                              Icon(Icons.close,color: Colors.black,size: 30,),
-                              SizedBox(width: 4,),
-                            ],
-                          ),
-                        ),
-
-
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 600,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }

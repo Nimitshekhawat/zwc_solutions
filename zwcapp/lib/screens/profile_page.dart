@@ -36,7 +36,7 @@ class _profilepageState extends State<profilepage> {
     });
   }
 
-  List<String> companiesAssigned = ["Tata", "Birla", "30 days", "Smarden", "Mahindra", "Jio"];
+  // List<String> companiesAssigned = ["Tata", "Birla", "30 days", "Smarden", "Mahindra", "Jio"];
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class _profilepageState extends State<profilepage> {
 
           preferredSize: Size.fromHeight(60),
           child: Mainappbar(
-              name: "Profile page",
+              name: "Your Profile",
               iconpath: "assets/images/edit_pencil.png",
               context: context,
             ontap: _navigateAndRefresh
@@ -108,15 +108,15 @@ class _profilepageState extends State<profilepage> {
                     SizedBox(height: 10),
 
                     // Work Details
-                    _buildWorkDetails(),
+                    // _buildWorkDetails(),
                     SizedBox(height: 7),
 
                     // Divider line
-                    Divider(thickness: 2, color: Color(0xFF00BD15)),
+                    // Divider(thickness: 2, color: Color(0xFF00BD15)),
                     SizedBox(height: 10),
 
                     // General Settings
-                    _buildGeneralSettings(),
+                    // _buildGeneralSettings(),
                     InkWell(
                       onTap: () async {
                         var sharedPref = await SharedPreferences.getInstance();
@@ -124,10 +124,24 @@ class _profilepageState extends State<profilepage> {
                         Navigator.pushReplacement(
                             context, MaterialPageRoute(builder: (context) => Login()));
                       },
-                      child: Container(
-                        height: 20,
-                        width: 60,
-                        child: Center(child: Text("log out")),
+                      child: Center(
+                        child: Container(
+                          height: 40,
+                          width: 80,
+                          decoration: BoxDecoration(
+                            color: Colors.green,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black,
+                                spreadRadius: 1.2,
+                                blurRadius: 1
+                              )
+                            ]
+
+                          ),
+                          child: Center(child:Textpoppinslight_16(text: "Log out",color: Colors.white,)),
+                        ),
                       ),
                     ),
                     SizedBox(height: 50),
@@ -172,79 +186,79 @@ class _profilepageState extends State<profilepage> {
     );
   }
 
-  Widget _buildWorkDetails() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TextpoppinsExtraBold_18(text: "Work Details"),
-            SizedBox(width: 8),
-            Container(height: 19, child: Image.asset("assets/images/Work_beg.png")),
-          ],
-        ),
-        SizedBox(height: 9),
-        _buildDetailRow("Your Score", "7/10"),
-        TextpoppinsMedium_16(text: "Companies Assigned"),
-        Container(
-          height: 232,
-          child: GridView.count(
-            crossAxisCount: 3,
-            crossAxisSpacing: 30.0,
-            mainAxisSpacing: 14.0,
-            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 9),
-            children: List.generate(companiesAssigned.length, (index) {
-              return Comapanies_box(Company_name: companiesAssigned[index]);
-            }),
-          ),
-        ),
-        _buildDetailRow("Task pending", "7/10"),
-      ],
-    );
-  }
+  // Widget _buildWorkDetails() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Row(
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         children: [
+  //           TextpoppinsExtraBold_18(text: "Work Details"),
+  //           SizedBox(width: 8),
+  //           Container(height: 19, child: Image.asset("assets/images/Work_beg.png")),
+  //         ],
+  //       ),
+  //       SizedBox(height: 9),
+  //       _buildDetailRow("Your Score", "7/10"),
+  //       TextpoppinsMedium_16(text: "Companies Assigned"),
+  //       // Container(
+  //       //   height: 232,
+  //       //   child: GridView.count(
+  //       //     crossAxisCount: 3,
+  //       //     crossAxisSpacing: 30.0,
+  //       //     mainAxisSpacing: 14.0,
+  //       //     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 9),
+  //       //     children: List.generate(companiesAssigned.length, (index) {
+  //       //       return Comapanies_box(Company_name: companiesAssigned[index]);
+  //       //     }),
+  //       //   ),
+  //       // ),
+  //       _buildDetailRow("Task pending", "7/10"),
+  //     ],
+  //   );
+  // }
 
-  Widget _buildGeneralSettings() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            TextpoppinsExtraBold_18(text: "General Settings"),
-            SizedBox(width: 8),
-            Container(height: 19, child: Image.asset("assets/images/settings_icon.png")),
-          ],
-        ),
-        SizedBox(height: 9),
-        _buildSwitchRow("Notifications", _anotherFeature, (val) {
-          setState(() {
-            _anotherFeature = val;
-          });
-        }),
-        _buildSwitchRow("Another Feature", _notifications, (val) {
-          setState(() {
-            _notifications = val;
-          });
-        }),
-      ],
-    );
-  }
+  // Widget _buildGeneralSettings() {
+  //   return Column(
+  //     crossAxisAlignment: CrossAxisAlignment.start,
+  //     children: [
+  //       Row(
+  //         crossAxisAlignment: CrossAxisAlignment.center,
+  //         children: [
+  //           TextpoppinsExtraBold_18(text: "General Settings"),
+  //           SizedBox(width: 8),
+  //           Container(height: 19, child: Image.asset("assets/images/settings_icon.png")),
+  //         ],
+  //       ),
+  //       SizedBox(height: 9),
+  //       _buildSwitchRow("Notifications", _anotherFeature, (val) {
+  //         setState(() {
+  //           _anotherFeature = val;
+  //         });
+  //       }),
+  //       _buildSwitchRow("Another Feature", _notifications, (val) {
+  //         setState(() {
+  //           _notifications = val;
+  //         });
+  //       }),
+  //     ],
+  //   );
+  // }
 
-  Widget _buildSwitchRow(String title, bool value, Function(bool) onToggle) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          TextpoppinsMedium_16(text: title),
-          FlutterSwitch(
-            activeColor: Colors.green,
-            value: value,
-            onToggle: onToggle,
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildSwitchRow(String title, bool value, Function(bool) onToggle) {
+  //   return Padding(
+  //     padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 8),
+  //     child: Row(
+  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //       children: [
+  //         TextpoppinsMedium_16(text: title),
+  //         FlutterSwitch(
+  //           activeColor: Colors.green,
+  //           value: value,
+  //           onToggle: onToggle,
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

@@ -72,7 +72,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60),
         child: Mainappbar(
-          name: "Edit Profile Page",
+          name: "Edit Profile",
           context: context,
 
         ),

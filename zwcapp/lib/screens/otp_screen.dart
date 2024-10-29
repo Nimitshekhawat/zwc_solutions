@@ -263,7 +263,7 @@ class _otp_pageState extends State<otp_page> {
                         height: 40,
                         width: 250,
                         decoration: BoxDecoration(
-                          color: Colors.blueAccent,
+                          color: Colors.green,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Center(
@@ -272,6 +272,7 @@ class _otp_pageState extends State<otp_page> {
                             text: "Verify OTP",
                             fontweight: FontWeight.bold,
                             color: Colors.white,
+
                             textoverflow: TextOverflow.visible,
                           ),
                         ),

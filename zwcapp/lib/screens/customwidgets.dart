@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:zwcapp/screens/Assigned_Companies.dart';
+// import 'package:zwcapp/screens/Assigned_Companies.dart';
 import 'package:zwcapp/screens/Edit_profile_page.dart';
 import 'package:zwcapp/screens/profile_page.dart';
 
@@ -77,7 +77,7 @@ Widget TextpoppinsMedium_16({
     style: GoogleFonts.poppins(
 
       textStyle: TextStyle(
-        fontSize:  16 ?? fontsize,
+        fontSize:  fontsize ??16,
         color: color ?? Colors.black,
         fontWeight: fontweight ?? FontWeight.w500,
         overflow: textoverflow ?? TextOverflow.ellipsis,
@@ -192,6 +192,63 @@ Widget text_field({
     ),
   );
 }
+
+
+//answer custom text
+Widget answertext_field({
+  required BuildContext context,
+  required TextEditingController controller,
+  required String? hintText,
+  double? width,
+  double? height,
+  double? fontSize,
+  FontWeight? fontWeight,
+  Color? color,
+  Color? backColor,
+  double? paddingSize,
+  bool readOnly = false,
+  required TextInputType keyboardType,
+  List<TextInputFormatter>? inputFormatters,
+  VoidCallback? onTap,
+}) {
+  return Container(
+    // Initial height of the text field
+    height: height ?? 90,
+    width: width ?? MediaQuery.of(context).size.width * 0.80,
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      color: backColor ?? Colors.white,
+    ),
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      child: TextField(
+        controller: controller,
+        keyboardType: keyboardType,
+        maxLines: null, // Allows the text field to expand
+        textAlignVertical: TextAlignVertical.top, // Align text to the top
+        decoration: InputDecoration(
+          hintText: hintText,
+          hintStyle: GoogleFonts.roboto(
+              textStyle: TextStyle(
+                  fontSize: fontSize ?? 14,
+                  color: Color(0xFF898989),
+                  fontWeight: fontWeight ?? FontWeight.w400)),
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+          isDense: true,
+        ),
+        style: TextStyle(
+          fontSize: fontSize ?? 14,
+          color: color ?? Colors.black,
+        ),
+        inputFormatters: inputFormatters, // Add any input formatters if needed
+        readOnly: readOnly, // Make the field read-only if specified
+        onTap: onTap, // Execute onTap if specified
+      ),
+    ),
+  );
+}
+
 Widget iconandtext({
   required String icon_image,
   required String icon_text,
@@ -226,61 +283,50 @@ Widget iconandtext({
   );
 }
 
-
-//custom app bar
-
+// Custom AppBar widget
 Widget dashboard_appbar({
   required String name,
   required String iconpath,
   required BuildContext context,
-}){
+}) {
   return AppBar(
     automaticallyImplyLeading: false,
+    shadowColor: Colors.black,
     backgroundColor: Color(0xFFB1EAB5),
-    shadowColor: Colors.black ,
     elevation: 3,
-
-    title:Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Textpoppins400_16(
-          fontsize: 30,
-          text: "ZWC",
-          fontweight: FontWeight.w900,
-          color: Colors.black,
-        ),
-        Row(
-          children: [
-            InkWell(
-              onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>AssignedCompanies()));
-              },
-              child: Container(
-                  height: 36,
-                  width: 45,
-                  child: Image.asset("assets/images/Companies_icon.png")),
-            ),
-            SizedBox(
-              width: 20,
-            ),
-            InkWell(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context)=>profilepage()));
-              },
-              child: CircleAvatar(
-                minRadius: 25,
-                maxRadius: 26,
-                backgroundImage:
-                AssetImage("assets/images/profile_image.png"),
-                backgroundColor: Colors.black,
+    // Set height for AppBar
+    title:
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Image.asset(
+                "assets/images/logo_dashboard_zwc.png",
+                height: 50,
+                width: 56,
               ),
+              const SizedBox(width: 8),
+              TextpoppinsExtraBold_18(text: name, color: Colors.black,fontsize: 25),
+            ],
+          ),
+          InkWell(
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => profilepage()));
+            },
+            child: CircleAvatar(
+              minRadius: 25,
+              maxRadius: 26,
+              backgroundImage: AssetImage(iconpath),
+              backgroundColor: Colors.black,
             ),
-          ],
-        )
-      ],
-    ),
+          ),
+        ],
+      ),
+
   );
 }
+
 
 Widget Mainappbar({
   required String name,
@@ -349,3 +395,63 @@ Widget Comapanies_box({
 
 }
 
+Widget Savebtn({
+  required String text,
+   Color? bgcolor,
+   Color? textcolor,
+   double? border,
+
+}){
+  return Container(
+    height: 57,
+    width: 155,
+    decoration: BoxDecoration(
+      color: bgcolor ?? Color(0xFF37B943),
+      borderRadius: BorderRadius.circular(26),
+      boxShadow: [
+        BoxShadow(
+          blurRadius: 1.7,
+          spreadRadius: 2,
+          color: Colors.black12
+        ),
+      ],
+      border: Border.all(
+        color: Colors.black,
+        width: border ??0.0
+      )
+      ),
+    child: Center(child: TextpoppinsExtraBold_18(text: text ?? "Save", color: textcolor ?? Colors.white)),
+
+  );
+}
+
+
+Widget yes_skip({
+  required String text,
+  Color? bgcolor,
+  Color? textcolor,
+  double? border,
+
+}){
+  return Card(
+    elevation: 3,
+    child: Container(
+      height: 57,
+      width: 140,
+      decoration: BoxDecoration(
+          color: bgcolor ?? Color(0xFF1CF835),
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+                blurRadius: 3,
+                spreadRadius: 2,
+                color: Colors.grey
+            ),
+          ],
+    
+      ),
+      child: Center(child: TextpoppinsExtraBold_18(text: text ?? "Save", color: textcolor ?? Colors.white,fontsize: 20)),
+    
+    ),
+  );
+}

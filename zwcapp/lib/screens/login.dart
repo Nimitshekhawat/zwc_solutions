@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart'; // For storing user data
+import 'package:zwcapp/screens/Assigned_Companies.dart';
+import 'package:zwcapp/screens/Dashboard_screen.dart';
 import 'package:zwcapp/screens/otp_screen.dart';
 import 'package:zwcapp/screens/splash_screen.dart';
 import 'customwidgets.dart';
@@ -18,6 +20,9 @@ class _LoginState extends State<Login> {
   final TextEditingController _userIdController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  static const String token = 'token';
+  static const String uid = 'uid';
+  static const String user_role_id = 'user_role_id';
   // Define your keys (keep them secure in production)
   static final String appKey = dotenv.env['APP_KEY'] ?? 'defaultAppKey';
   static final String authKey = dotenv.env['AUTH_KEY'] ?? 'defaultAuthKey';
@@ -39,7 +44,7 @@ class _LoginState extends State<Login> {
 
     try {
       // Create request body
-      final requestBody = json.encode({'username': "rohit@30days.in", 'password': "Rohit_1@3\$"});
+      final requestBody = json.encode({'username': userId, 'password': password});
       print('Request Body: $requestBody'); // Log the request body
 
       final response = await http.post(
@@ -59,19 +64,21 @@ class _LoginState extends State<Login> {
         // Handle successful login
         final Map<String, dynamic> responseData = json.decode(response.body);
         final String token = responseData['token']; // Ensure your API returns this
-        final String userId = responseData['user_id']; // Adjust based on your API's response
+        final String userId = responseData['uid']; // Adjust based on your API's response
+        final String userRoleId = responseData['user_role_id']; // Adjust based on your API's response
 
         // Store token and user ID securely
         SharedPreferences prefs = await SharedPreferences.getInstance();
         var sharedPref= await SharedPreferences.getInstance();
         sharedPref.setBool(SplashScreenState.KEYLOGIN, true);
         await prefs.setString('token', token);
-        await prefs.setString('user_id', userId);
+        await prefs.setString('uid', userId);
+        await prefs.setString('user_role_id', userRoleId);
 
         // Navigate to OTP page or the next screen
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => otp_page()),
+          MaterialPageRoute(builder: (context) => DashboardScreen()),
         );
       } else {
         // Handle error
