@@ -15,13 +15,15 @@ class ProfileService {
 
     final String authKey = dotenv.env['AUTH_KEY'] ?? 'defaultAuthKey';
     final String appKey = dotenv.env['APP_KEY'] ?? 'defaultAppKey';
+    final String baseurl = dotenv.env['BASE_URL'] ?? 'defaultAppKey';
+
     // print("token : " + token! + "authkey : "+ authKey +"appkey :"+ appKey + "uid :"+uid!);
     if (token == null || uid == null) {
       print("Error: Token or UID is null. Cannot proceed with profile fetch.");
       return null; // Handle cases where token or uid is not available
     }
 
-    final url = 'https://wmaapi.zerowastecitizen.in/user/profile';
+    final url = baseurl+"user/profile";
     // Replace with your API endpoint
 
     try {
@@ -55,11 +57,12 @@ class ProfileService {
 
     final String authKey = dotenv.env['AUTH_KEY'] ?? 'defaultAuthKey';
     final String appKey = dotenv.env['APP_KEY'] ?? 'defaultAppKey';
+    final String baseurl = dotenv.env['BASE_URL'] ?? 'defaultAppKey';
     if (token == null || uid == null) {
       return false; // Handle cases where token or uid is not available
     }
 
-    final url = 'https://wmaapi.zerowastecitizen.in/user/update_profile'; // Replace with your API endpoint
+    final url = baseurl+"user/update_profile"; // Replace with your API endpoint
 
     try {
       final response = await http.post(

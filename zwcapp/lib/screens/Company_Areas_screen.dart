@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_animation_progress_bar/simple_animation_progress_bar.dart';
+import 'package:zwcapp/Model/Get_all_areas.dart';
 import 'package:zwcapp/screens/Sections_Screen.dart';
 import 'package:zwcapp/screens/customwidgets.dart';
 import 'package:zwcapp/screens/preaudit_question.dart';
@@ -8,29 +9,28 @@ import 'package:zwcapp/screens/preaudit_question.dart';
 import '../Model/All_comaniesdata.dart';
 import '../Model/Locationmodel.dart';
 import '../services/Companies_services.dart';
-import 'Company_Areas_screen.dart';
 
-class CompaniesLocation extends StatefulWidget {
-  const CompaniesLocation({super.key, required this.userid});
+class CompanyAreas extends StatefulWidget {
+  const CompanyAreas({super.key, required this.userid});
   final String userid;
 
   @override
-  State<CompaniesLocation> createState() => _CompaniesLocationState();
+  State<CompanyAreas> createState() => _CompanyAreasState();
 }
 
-class _CompaniesLocationState extends State<CompaniesLocation> {
-  LocationModel? _LocationData;
+class _CompanyAreasState extends State<CompanyAreas> {
+  GetAllAreas? _LocationData;
 
   @override
   void initState() {
     super.initState();
-    _fetchCompanydataLocation();
+    _fetchCompanyareabyid();
   }
 
   // Get all companies data
-  Future<void> _fetchCompanydataLocation() async {
+  Future<void> _fetchCompanyareabyid() async {
     CompaniesServices profileService = CompaniesServices();
-    LocationModel? profile = await profileService.Getallcompaniesbyid(widget.userid);
+    GetAllAreas? profile = await profileService.Getallareasbyid(widget.userid);
     setState(() {
       _LocationData = profile; // Update state with profile data
     });
@@ -69,7 +69,7 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                     Padding(
                       padding: const EdgeInsets.only(left: 6),
                       child: TextpoppinsExtraBold_18(
-                          text: "Locations",
+                          text: "Areas",
                           color: Colors.black,
                           textalign: TextAlign.start,
                           fontsize: 20
@@ -85,13 +85,13 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                       itemBuilder: (context, index) {
                         var company = _LocationData!.data[index]; // Access company data safely
                         return Padding(
-                          padding: const EdgeInsets.all(15.0),
+                          padding: const EdgeInsets.only(top: 10,left: 7,bottom: 10,right: 7),
                           child: InkWell(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CompanyAreas(userid: company.id,), // Pass company ID here
+                                  builder: (context) => PreAuditScreen(locationId: company.id), // Pass company ID here
                                 ),
                               );
                             },
@@ -113,75 +113,28 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                                   Expanded(
                                     flex: 3,
                                     child: Padding(
-                                      padding: const EdgeInsets.only(left: 14, top: 4),
+                                      padding: const EdgeInsets.only(left: 14, top: 2),
                                       child: Column(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           TextpoppinsExtraBold_18(
-                                              text: company.locationName, // Access company name
-                                              fontsize: 15,
+                                              text: company.locationAreaName, // Access company name
+                                              fontsize: 16.5,
                                               color: Colors.black,
                                               maxline: 1,
                                               textoverflow: TextOverflow.ellipsis
                                           ),
-                                          SizedBox(height: 4.5,),
+                                          SizedBox(height: 7,),
                                           TextpoppinsMedium_16(
                                               text: "Cont. Person : " + company.contactPerson, // Access company city
-                                              fontsize: 14,
+                                              fontsize: 15,
                                               color: Colors.black54,
                                               maxline: 1,
                                               textoverflow: TextOverflow.ellipsis
                                           ),
-                                          SizedBox(
-                                            height: 6,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Container(
-                                                child: TextpoppinsMedium_16(text: company.preCompletionPercentage + "% " ,fontsize: 14),
-                                              ),
-                                              Container(
-                                                child: SimpleAnimationProgressBar(
-                                                  height: 19,
-                                                  width: MediaQuery.of(context).size.width * 0.30,
-                                                  backgroundColor: Color(0xFFA4FCC0),
-                                                  foregrondColor: Color(0xFF34F771),
-                                                  ratio: company.preCompletionPercentage != null ? double.tryParse(company.preCompletionPercentage) ?? 0.0 : 0.0,
-                                                  direction: Axis.horizontal,
-                                                  curve: Curves.fastLinearToSlowEaseIn,
-                                                  duration: const Duration(seconds: 3),
-                                                  borderRadius: BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          company.preAuditSubmitted == "0"
-                                              ? Row(
 
-                                                children: [
-                                                  TextpoppinsMedium_16(
-                                                    text: "Status ",
-                                                    fontsize: 14,
-                                                    color: Colors.black, // You can customize the color
-                                                  ),
-                                                  SizedBox(width: 5,),
-                                                  TextpoppinsMedium_16(
-                                                    text: "Not Submitted",
-                                                    fontsize: 14,
-                                                    color: Colors.red, // You can customize the color
-                                                  ),
-                                                ],
-                                              ) : TextpoppinsMedium_16(
-                                            text: "Status : Submitted",
-                                            fontsize: 14,
-                                            color: Colors.green, // You can customize the color
-                                          ),
 
-                                          SizedBox(height: 6),
                                         ],
                                       ),
                                     ),
@@ -221,7 +174,7 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                                                   height: 20,
 
                                                   // Set width according to your design// Adjust width as necessary
-                                               // This will ensure the image scales with the height
+                                                  // This will ensure the image scales with the height
                                                 ),
                                               ),
                                             ),

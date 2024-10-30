@@ -74,7 +74,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     Padding(
                       padding: const EdgeInsets.only(left: 6),
                       child: TextpoppinsExtraBold_18(
-                        text: "Assigned Companies",
+                        text: "Industries",
                         color: Colors.black,
                         textalign: TextAlign.start,
                         fontsize: 20,

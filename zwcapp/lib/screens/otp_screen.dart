@@ -24,6 +24,7 @@ class _otp_pageState extends State<otp_page> {
 
   static final String appKey = dotenv.env['APP_KEY'] ?? 'defaultAppKey';
   static final String authKey = dotenv.env['AUTH_KEY'] ?? 'defaultAuthKey';
+  final String baseurl = dotenv.env['BASE_URL'] ?? 'defaultAppKey';
 
   // Loading state
   bool _isLoading = false;
@@ -40,7 +41,7 @@ class _otp_pageState extends State<otp_page> {
     }
 
     // Replace with your API endpoint for sending OTP
-    final url = 'https://wmaapi.zerowastecitizen.in/user/getlogin_otp';
+    final url = baseurl+'user/getlogin_otp';
 
     try {
       final response = await http.post(

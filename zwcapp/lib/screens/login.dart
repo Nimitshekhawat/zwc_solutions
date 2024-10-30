@@ -26,6 +26,7 @@ class _LoginState extends State<Login> {
   // Define your keys (keep them secure in production)
   static final String appKey = dotenv.env['APP_KEY'] ?? 'defaultAppKey';
   static final String authKey = dotenv.env['AUTH_KEY'] ?? 'defaultAuthKey';
+  final String baseurl = dotenv.env['BASE_URL'] ?? 'defaultAppKey';
 
   Future<void> login() async {
     final String userId = _userIdController.text.trim();
@@ -40,7 +41,7 @@ class _LoginState extends State<Login> {
     }
 
     // API endpoint for login
-    final url = 'https://wmaapi.zerowastecitizen.in/user/login';
+    final url = baseurl+ 'user/login';
 
     try {
       // Create request body

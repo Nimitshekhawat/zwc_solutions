@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 // import 'package:zwcapp/screens/Assigned_Companies.dart';
 import 'package:zwcapp/screens/Edit_profile_page.dart';
 import 'package:zwcapp/screens/profile_page.dart';
+import 'package:photo_view/photo_view.dart';
 
 Widget Textpoppins400_16({
   required double fontsize,
@@ -455,3 +456,52 @@ Widget yes_skip({
     ),
   );
 }
+
+
+
+
+
+class ImageViewer extends StatelessWidget {
+  final String imageUrl;
+
+  const ImageViewer({Key? key, required this.imageUrl}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => FullScreenImage(url: imageUrl),
+          ),
+        );
+      },
+      child: Image.network(imageUrl), // You can also use Image.file(File(imagePath))
+    );
+  }
+}
+
+
+class FullScreenImage extends StatelessWidget {
+  final String url;
+
+  const FullScreenImage({Key? key, required this.url}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: PhotoView(
+          imageProvider: NetworkImage(url),
+          minScale: PhotoViewComputedScale.contained,
+          maxScale: PhotoViewComputedScale.covered * 2,
+          heroAttributes: PhotoViewHeroAttributes(tag: url),
+        ),
+      ),
+    );
+  }
+}
+
+

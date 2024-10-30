@@ -39,7 +39,7 @@ class SplashScreenState extends State<SplashScreen> {
     var isLoggedIn = sharedPref.getBool(KEYLOGIN);
 
     // Reduced the Timer duration from 2 seconds to 1 second
-    Timer(Duration(seconds: 1), () {
+    Timer(Duration(seconds: 2), () {
       if (isLoggedIn != null) {
         if (isLoggedIn) {
           Navigator.pushReplacement(context,
