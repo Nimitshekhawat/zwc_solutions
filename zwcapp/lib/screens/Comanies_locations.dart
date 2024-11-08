@@ -78,7 +78,9 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                     const SizedBox(height: 10),
                     // Check if _LocationData is null
                     _LocationData == null
-                        ? Center(child: CircularProgressIndicator()) // Show loading indicator
+                        ? Container(
+                        height: 500,
+                        child: Center(child: CircularProgressIndicator())) // Show loading indicator
                         : ListView.builder(
                       shrinkWrap: true, // Makes the ListView take only the needed height
                       itemCount: _LocationData!.data.length, // Access the length safely
@@ -190,6 +192,7 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                                   Expanded(
                                     flex: 1,
                                     child: Container(
+                                      height: 122,
                                       decoration: const BoxDecoration(
                                         borderRadius: BorderRadius.only(
                                           topRight: Radius.circular(16),
@@ -205,11 +208,12 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                                           children: [
                                             Image.asset(
                                               "assets/images/green_btn_bg.png",
-                                              fit: BoxFit.fill, // Ensure it fits the container
+                                              fit: BoxFit.fill,
+                                              height:140,// Ensure it fits the container
                                             ),
 
                                             Positioned(
-                                              top:45,
+                                              top:50,
 
                                               left: 30,
 

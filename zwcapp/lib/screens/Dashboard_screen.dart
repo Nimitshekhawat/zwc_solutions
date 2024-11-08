@@ -84,8 +84,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     // Show loading indicator or companies list
                     if (_isLoading)
-                      Center(
-                        child: CircularProgressIndicator(),
+                      Container(
+                        height: 500,
+                        child: Center(
+                          child: CircularProgressIndicator(),
+                        ),
                       )
                     else
                       ListView.builder(

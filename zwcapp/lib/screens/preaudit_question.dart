@@ -5,6 +5,7 @@ import 'package:zwcapp/screens/customwidgets.dart';
 import 'package:image/image.dart' as img; // For image compression
 import '../Model/preaudit_model.dart';
 import '../services/preaudit_service.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Answer {
   final String answerText;
@@ -76,13 +77,41 @@ class _PreAuditScreenState extends State<PreAuditScreen> {
     }
   }
 
+  // Future<void> _takePictureFromCamera() async {
+  //   final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+  //   if (image != null) {
+  //     final compressedImage = await _compressImage(File(image.path));
+  //     setState(() {
+  //       _selectedImage = compressedImage;
+  //     });
+  //   }
+  // }
+
+  // Method to handle camera permissions and capture image
   Future<void> _takePictureFromCamera() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
-    if (image != null) {
-      final compressedImage = await _compressImage(File(image.path));
-      setState(() {
-        _selectedImage = compressedImage;
-      });
+    // Check if camera permission is granted
+    var status = await Permission.camera.status;
+    if (status.isDenied || status.isPermanentlyDenied) {
+      // Request permission if it's denied
+      status = await Permission.camera.request();
+    }
+
+    // If permission is granted, take a picture
+    if (status.isGranted) {
+      final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+      if (image != null) {
+        final compressedImage = await _compressImage(File(image.path));
+        setState(() {
+          _selectedImage = compressedImage;
+        });
+      }
+    } else {
+      // Handle case where permission is permanently denied and user needs to enable it manually
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Camera permission is required to take photos."),
+        ),
+      );
     }
   }
 
@@ -97,12 +126,12 @@ class _PreAuditScreenState extends State<PreAuditScreen> {
 
     final currentQuestion = _fetchedData!.data[sectionIndex].subSections[subSectionIndex].questions[questionIndex];
 
-    if (answer.text.isEmpty && _selectedImage == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Answer is empty! Please provide an answer or an image.")),
-      );
-      return;
-    }
+    // if (answer.text.isEmpty && _selectedImage == null) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text("Answer is empty! Please provide an answer or an image.")),
+    //   );
+    //   return;
+    // }
 
     bool success = await _service.submitAnswerWithImages(
       areaId: widget.locationId,
@@ -115,7 +144,15 @@ class _PreAuditScreenState extends State<PreAuditScreen> {
   }
 
   void handleYesOrSkip(bool isYes) async {
+
+
     if (isYes) {
+      if (answer.text.isEmpty && _selectedImage == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Answer is empty! Please provide an answer or an image.")),
+        );
+        return; // Exit early, do not proceed to the next question
+      }
       // Submit the answer before moving to the next question
       await _submitAnswerWithImage();
     }

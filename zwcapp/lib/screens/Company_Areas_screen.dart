@@ -78,7 +78,9 @@ class _CompanyAreasState extends State<CompanyAreas> {
                     const SizedBox(height: 10),
                     // Check if _LocationData is null
                     _LocationData == null
-                        ? Center(child: CircularProgressIndicator()) // Show loading indicator
+                        ? Container(
+                        height: 500,
+                        child: Center(child: CircularProgressIndicator())) // Show loading indicator
                         : ListView.builder(
                       shrinkWrap: true, // Makes the ListView take only the needed height
                       itemCount: _LocationData!.data.length, // Access the length safely
