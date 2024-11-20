@@ -4,11 +4,15 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_windows
+  media_kit_libs_windows_video
+  media_kit_video
   permission_handler_windows
+  screen_brightness_windows
   simple_animation_progress_bar
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
+  media_kit_native_event_loop
 )
 
 set(PLUGIN_BUNDLED_LIBRARIES)

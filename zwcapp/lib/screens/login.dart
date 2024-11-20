@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart'; // For storing user data
-import 'package:zwcapp/screens/Assigned_Companies.dart';
 import 'package:zwcapp/screens/Dashboard_screen.dart';
+import 'package:zwcapp/screens/new_dashboard_design.dart';
 import 'package:zwcapp/screens/otp_screen.dart';
 import 'package:zwcapp/screens/splash_screen.dart';
 import 'customwidgets.dart';
@@ -76,10 +76,12 @@ class _LoginState extends State<Login> {
         await prefs.setString('uid', userId);
         await prefs.setString('user_role_id', userRoleId);
 
+        NewDashboardDesignState.isloggedin=true;
+
         // Navigate to OTP page or the next screen
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => DashboardScreen()),
+          MaterialPageRoute(builder: (context) =>NewDashboardDesign()),
         );
       } else {
         // Handle error
@@ -152,19 +154,17 @@ class _LoginState extends State<Login> {
                         height: 40,
                         width: 250,
                         decoration: BoxDecoration(
-                          color: Color(0xFF37B943),
+                          color: Color(0xFF1cad48),
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
                               blurRadius: 1,
                               spreadRadius: 1.6,
                               color: Colors.black54,
-                            )
+                            ),
+
                           ],
-                          border: Border.all(
-                            width: 0.5,
-                            color: Colors.black,
-                          ),
+
                         ),
                         child: Center(
                           child: Textpoppins400_16(

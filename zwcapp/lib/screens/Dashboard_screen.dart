@@ -50,7 +50,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       body: Stack(
         children: [
-          // Background Image
+          // Background Image// Background Image
           SizedBox.expand(
             child: Image.asset(
               'assets/images/dashboard_background.png',
@@ -103,7 +103,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               onTap: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (context) => CompaniesLocation(userid: company!.id)),
+                                  MaterialPageRoute(builder: (context) => CompaniesLocation(userid: company!.id,companyname: company!.companyName,)),
                                 );
                               },
                               child: Container(

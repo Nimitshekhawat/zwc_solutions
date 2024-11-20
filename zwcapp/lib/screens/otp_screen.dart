@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;  // Import http package
 import 'package:shared_preferences/shared_preferences.dart'; // Import for saving token
-import 'package:zwcapp/screens/dashboard_screen.dart'; // Assuming you have a dashboard screen
+// import 'package:zwcapp/screens/dashboard_screen.dart'; // Assuming you have a dashboard screen
 import 'package:zwcapp/screens/splash_screen.dart';
 import 'customwidgets.dart';
+import 'new_dashboard_design.dart';
 
 
 
@@ -141,11 +142,12 @@ class _otp_pageState extends State<otp_page> {
 
           var sharedPref= await SharedPreferences.getInstance();
           sharedPref.setBool(SplashScreenState.KEYLOGIN, true);
+          NewDashboardDesignState.isloggedin=true;
 
           // Navigate to the dashboard or home screen
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => DashboardScreen()),
+            MaterialPageRoute(builder: (context) => NewDashboardDesign()),
           );
         } else {
           // Handle unsuccessful login response
@@ -229,16 +231,16 @@ class _otp_pageState extends State<otp_page> {
                         height: 40,
                         width: 250,
                         decoration: BoxDecoration(
-                          color: Color(0xFF37B943),
+                          color: Color(0xFF1cad48),
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
                               blurRadius: 1,
-                              spreadRadius: 1.6,
+                              spreadRadius: 1,
                               color: Colors.black54,
                             )
                           ],
-                          border: Border.all(width: 0.5, color: Colors.black),
+                          // border: Border.all(width: 0.5, color: Colors.black),
                         ),
                         child: Center(
                           child: Textpoppins400_16(
@@ -264,8 +266,15 @@ class _otp_pageState extends State<otp_page> {
                         height: 40,
                         width: 250,
                         decoration: BoxDecoration(
-                          color: Colors.green,
+                          color:Color(0xFF1cad48),
                           borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 1,
+                              spreadRadius: 1,
+                              color: Colors.black54,
+                            )
+                          ],
                         ),
                         child: Center(
                           child: Textpoppins400_16(

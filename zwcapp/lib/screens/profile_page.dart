@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zwcapp/main.dart';
+import 'package:zwcapp/screens/change%20password.dart';
 import 'package:zwcapp/screens/customwidgets.dart';
 import 'package:zwcapp/screens/login.dart';
 import 'package:zwcapp/screens/splash_screen.dart';
@@ -8,6 +10,8 @@ import 'package:zwcapp/screens/splash_screen.dart';
 import '../Model/profile_page.dart';
 import '../services/profile_page.dart';
 import 'Edit_profile_page.dart';
+import 'Forget_password.dart';
+import 'new_dashboard_design.dart';
 
 class profilepage extends StatefulWidget {
   const profilepage({super.key});
@@ -48,9 +52,8 @@ class _profilepageState extends State<profilepage> {
               name: "Your Profile",
               iconpath: "assets/images/edit_pencil.png",
               context: context,
-            ontap: _navigateAndRefresh
-
-
+            ontap: _navigateAndRefresh,
+            isback: false
           )
       ),
 
@@ -60,20 +63,20 @@ class _profilepageState extends State<profilepage> {
           : Container(
         height: double.infinity,
         width: double.infinity,
-        color: Color(0xFFD4EAD6),
+        color: Color(0xFFdce6df),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Profile header
               Container(
-                height: 224,
+                height: 230,
                 width: double.infinity,
                 child: Stack(
                   children: [
                     Image.asset(
                       "assets/images/profile_bg.png",
-                      fit: BoxFit.fill,
+                      fit: BoxFit.fitWidth,
                     ),
                     Center(
                       child: Container(
@@ -88,9 +91,9 @@ class _profilepageState extends State<profilepage> {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 7),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 12,),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -107,43 +110,133 @@ class _profilepageState extends State<profilepage> {
                     Divider(thickness: 2, color: Color(0xFF00BD15)),
                     SizedBox(height: 10),
 
-                    // Work Details
-                    // _buildWorkDetails(),
-                    SizedBox(height: 7),
 
-                    // Divider line
-                    // Divider(thickness: 2, color: Color(0xFF00BD15)),
+                    TextpoppinsExtraBold_18(text: "Account"),
                     SizedBox(height: 10),
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>changepassword()));
+                      },
+                      child: Container(
+                        height: 40,
+
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.green.shade200,
+
+                          ),
+
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10,right: 10),
+                                child: Center(child: TextpoppinsMedium_16(text: "Change password")),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right:10),
+                                child: Container(
+                                  height: 35,
+                                  width: 35,
+                                  child:Icon(Icons.chevron_right,color: Colors.black,size: 32,),
+                                ),
+                              )
+                            ],
+                          )),
+                    ),
+                    SizedBox(
+                      height: 12,
+                    ),
+                    InkWell(
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>forgetpassword()));
+                      },
+                      child: Container(
+                          height: 40,
+
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.green.shade200,
+
+                          ),
+
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.only(left: 10,right: 10),
+                                child: Center(child: TextpoppinsMedium_16(text: "Forgot Password")),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right:10),
+                                child: Container(
+                                  height: 35,
+                                  width: 35,
+                                  child:Icon(Icons.chevron_right,color: Colors.black,size: 32,),
+                                ),
+                              )
+                            ],
+                          )),
+                    ),
+
+
+                    SizedBox(height: 20),
+                    Divider(thickness: 2, color: Color(0xFF00BD15)),
+                    SizedBox(
+                      height: 12,
+                    ),
 
                     // General Settings
                     // _buildGeneralSettings(),
                     InkWell(
                       onTap: () async {
+                        setState(() {
+                          NewDashboardDesignState.isloggedin=false;
+
+                        });
+
                         var sharedPref = await SharedPreferences.getInstance();
                         sharedPref.setBool(SplashScreenState.KEYLOGIN, false);
-                        Navigator.pushReplacement(
-                            context, MaterialPageRoute(builder: (context) => Login()));
+
+                        // Navigate to the login page and clear all previous screens from the stack
+                        Navigator.of(context, rootNavigator: true)
+                            .pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (BuildContext context) {
+                              return const Login();
+                            },
+                          ),
+                              (_) => false,
+                        );
                       },
-                      child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 6),
                         child: Container(
-                          height: 40,
+                          height: 37,
                           width: 80,
                           decoration: BoxDecoration(
-                            color: Colors.green,
+                            color: Color(0xFF1cad48),
                             borderRadius: BorderRadius.circular(16),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black,
-                                spreadRadius: 1.2,
-                                blurRadius: 1
-                              )
-                            ]
-
+                                color: Colors.grey,
+                                spreadRadius: 1,
+                                blurRadius: 0.3,
+                              ),
+                            ],
                           ),
-                          child: Center(child:Textpoppinslight_16(text: "Log out",color: Colors.white,)),
+                          child: Center(
+                            child: Textpoppinslight_16(
+                              text: "Log out",
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                     ),
+
                     SizedBox(height: 50),
                   ],
                 ),

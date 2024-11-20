@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
 // import 'package:zwcapp/screens/Assigned_Companies.dart';
 import 'package:zwcapp/screens/Edit_profile_page.dart';
 import 'package:zwcapp/screens/profile_page.dart';
@@ -93,6 +95,8 @@ class Textpoppinslight_16 extends StatelessWidget {
   final TextOverflow? textoverflow;
   final int? maxline;
   final Color color;
+  final double? fontsize;
+  final FontStyle? textStyle;
 
 
   const Textpoppinslight_16({
@@ -100,7 +104,9 @@ class Textpoppinslight_16 extends StatelessWidget {
     required this.text,
     this.color=Colors.black,
     this.textoverflow,
-    this.maxline
+    this.maxline,
+    this.fontsize,
+    this.textStyle,
   }) : super(key: key);
 
   @override
@@ -110,9 +116,10 @@ class Textpoppinslight_16 extends StatelessWidget {
       overflow: textoverflow??TextOverflow.clip,
       maxLines: maxline??1,
       style: TextStyle(
-        fontSize: 16,
+        fontSize: fontsize ?? 16,
         fontFamily: 'Poppins',
         color: color,// Adjust to your font family
+        fontStyle: textStyle
       ),
     );
   }
@@ -223,6 +230,7 @@ Widget answertext_field({
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       child: TextField(
+        autofocus: false,
         controller: controller,
         keyboardType: keyboardType,
         maxLines: null, // Allows the text field to expand
@@ -327,55 +335,139 @@ Widget dashboard_appbar({
 
   );
 }
+Widget dashboard_appbar_bgimg({
+  required String name,
+  required String iconpath,
+  required BuildContext context,
+  double height = 63, // Default height, can be overridden
+  String? backgroundImage, // Optional background image
+}) {
+  return Container(
+    height: height,
+    decoration: BoxDecoration(
+      color: Color(0xFFB1EAB5), // Default color if no image is provided
+      image: backgroundImage != null
+          ? DecorationImage(
+        image: AssetImage(backgroundImage),
+        fit: BoxFit.fitHeight,
+      )
+          : null,
+    ),
+    child: AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.transparent, // Set transparent for the background image to show
+      elevation: 2, // Remove AppBar shadow to see the background image clearly
+      title: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Image.asset(
+                  "assets/images/logo_dashboard_zwc.png",
+                  height: 50,
+                  width: 56,
+                ),
+                const SizedBox(width: 8),
+                TextpoppinsExtraBold_18(
+                  text: name,
+                  color: Colors.white,
+                  fontsize: 25,
+                ),
+              ],
+            ),
+            // InkWell(
+            //   onTap: () {
+            //     Navigator.push(
+            //       context,
+            //       MaterialPageRoute(builder: (context) => profilepage()),
+            //     );
+            //   },
+            //   child: CircleAvatar(
+            //     minRadius: 25,
+            //     maxRadius: 26,
+            //     backgroundImage: AssetImage(iconpath),
+            //     backgroundColor: Colors.black,
+            //   ),
+            // ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
 
 
 Widget Mainappbar({
   required String name,
   String? iconpath,
-   Widget? wheretogo,
+  Widget? wheretogo,
   VoidCallback? ontap,
   required BuildContext context,
-
-}){
-  return AppBar(
-    automaticallyImplyLeading: false,
-    backgroundColor:  Color(0xFFB1EAB5),
-    shadowColor:Colors.black,
-    elevation: 3,
-    title:Column(
-      children: [
-        SizedBox(
-          height: 8,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            InkWell(
-                onTap: (){
-                  Navigator.pop(context);
-                },
-                child: Container(
-                    height:20 ,
-                    width:16,
-                    child: Image.asset("assets/images/back_icon.png"))),
-            Expanded(
+  bool isback = true, // default value is true
+}) {
+  return Container(
+    decoration: BoxDecoration(
+      // color: Color(0xFFB1EAB5),
+      gradient: LinearGradient(
+        colors: [Color(0xFF519963), Color(0xFFa4d422)],
+        begin: Alignment.topLeft,
+        end: Alignment.topRight,
+      ),
+    ),
+    child: AppBar(
+      automaticallyImplyLeading: false,
+      backgroundColor: Colors.transparent,
+      // shadowColor: Colors.black,
+      elevation: 3,
+      title: Column(
+        children: [
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              // Show back icon only when isback is true
+              if (isback)
+                InkWell(
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                    height: 28,
+                    width: 23,
+                    child: Image.asset("assets/images/back_icon.png", fit: BoxFit.fill),
+                  ),
+                ),
+              Expanded(
                 flex: 2,
-                child: Container(child: Textpoppins400_16(fontsize: 20, text:name,fontweight: FontWeight.bold,maxline: 1,color: Colors.black))),
-            if (iconpath != null)
-              InkWell(
-                onTap: ontap,
                 child: Container(
-                  height: 22,
-                  width: 16,
-                  child: Image.asset(iconpath),
+                  child: Textpoppins400_16(
+                    fontsize: 20,
+                    text: name,
+                    fontweight: FontWeight.bold,
+                    maxline: 1,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-          ],
-        ),
-      ],
+              if (iconpath != null)
+                InkWell(
+                  onTap: ontap,
+                  child: Container(
+                    height: 22,
+                    width: 16,
+                    child: Image.asset(iconpath),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
     ),
   );
 }
+
 
 
 Widget Comapanies_box({
@@ -434,26 +526,31 @@ Widget yes_skip({
   double? border,
 
 }){
-  return Card(
-    elevation: 3,
-    child: Container(
-      height: 57,
-      width: 140,
-      decoration: BoxDecoration(
-          color: bgcolor ?? Color(0xFF1CF835),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-                blurRadius: 3,
-                spreadRadius: 2,
-                color: Colors.grey
-            ),
-          ],
-    
-      ),
-      child: Center(child: TextpoppinsExtraBold_18(text: text ?? "Save", color: textcolor ?? Colors.white,fontsize: 20)),
-    
+  return Container(
+    height: 33,
+    width: 94,
+    decoration: BoxDecoration(
+        color: bgcolor ?? Color(0xFF1CF835),
+        borderRadius: BorderRadius.circular(12),
+
+
+      gradient: LinearGradient(
+        colors: [Color(0xFF6ec25f), Color(0xFF9fad4e)],
+        begin: Alignment.topLeft,
+        end: Alignment.topRight,
+      ),// Default color if no image is provided
+      boxShadow: [
+        BoxShadow(
+          spreadRadius: 1,
+          blurRadius: 0.2,
+          color: Colors.grey
+        )
+      ]
+
+
     ),
+    child: Center(child: TextpoppinsExtraBold_18(text: text ?? "Save", color:  Colors.white,fontsize: 17)),
+
   );
 }
 
@@ -499,6 +596,47 @@ class FullScreenImage extends StatelessWidget {
           maxScale: PhotoViewComputedScale.covered * 2,
           heroAttributes: PhotoViewHeroAttributes(tag: url),
         ),
+      ),
+    );
+  }
+}
+
+class CustomVideoPlayer extends StatefulWidget {
+  final String videoUrl;
+
+  const CustomVideoPlayer({
+    Key? key,
+    required this.videoUrl,
+  }) : super(key: key);
+
+  @override
+  _CustomVideoPlayerState createState() => _CustomVideoPlayerState();
+}
+
+class _CustomVideoPlayerState extends State<CustomVideoPlayer> {
+  late final player = Player();
+  late final controller = VideoController(player);
+
+  @override
+  void initState() {
+    super.initState();
+    MediaKit.ensureInitialized();
+    player.open(Media(widget.videoUrl));
+  }
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width * 9.0 / 16.0,
+        child: Video(controller: controller),
       ),
     );
   }

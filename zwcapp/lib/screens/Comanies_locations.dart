@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_animation_progress_bar/simple_animation_progress_bar.dart';
+import 'package:zwcapp/screens/New_Areas_screen.dart';
 import 'package:zwcapp/screens/Sections_Screen.dart';
 import 'package:zwcapp/screens/customwidgets.dart';
 import 'package:zwcapp/screens/preaudit_question.dart';
@@ -11,11 +12,14 @@ import '../services/Companies_services.dart';
 import 'Company_Areas_screen.dart';
 
 class CompaniesLocation extends StatefulWidget {
-  const CompaniesLocation({super.key, required this.userid});
+  const CompaniesLocation({super.key, required this.userid,required this.companyname});
   final String userid;
+  final String companyname;
 
   @override
-  State<CompaniesLocation> createState() => _CompaniesLocationState();
+  State<CompaniesLocation> createState() => _CompaniesLocationState(
+
+  );
 }
 
 class _CompaniesLocationState extends State<CompaniesLocation> {
@@ -41,7 +45,7 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(63),
-        child: dashboard_appbar(name: "ZWC", iconpath: "assets/images/profile_image.png", context: context),
+        child: Mainappbar(name: "Locations", context: context),
       ),
       body: Stack(
         children: [
@@ -68,11 +72,11 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                     const SizedBox(height: 27),
                     Padding(
                       padding: const EdgeInsets.only(left: 6),
-                      child: TextpoppinsExtraBold_18(
-                          text: "Locations",
+                      child: TextpoppinsMedium_16(
+                          text: widget.companyname,
                           color: Colors.black,
                           textalign: TextAlign.start,
-                          fontsize: 20
+                          fontsize: 18
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -80,9 +84,10 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                     _LocationData == null
                         ? Container(
                         height: 500,
-                        child: Center(child: CircularProgressIndicator())) // Show loading indicator
+                        child: Center(child: CircularProgressIndicator(color: Colors.greenAccent,))) // Show loading indicator
                         : ListView.builder(
-                      shrinkWrap: true, // Makes the ListView take only the needed height
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),// Makes the ListView take only the needed height
                       itemCount: _LocationData!.data.length, // Access the length safely
                       itemBuilder: (context, index) {
                         var company = _LocationData!.data[index]; // Access company data safely
@@ -93,7 +98,7 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => CompanyAreas(userid: company.id,), // Pass company ID here
+                                  builder: (context) => newCompanyAreas(userid: company.id,companyname: widget.companyname,companyLocationname: company.locationName,), // Pass company ID here
                                 ),
                               );
                             },
@@ -113,7 +118,7 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                               child: Row(
                                 children: [
                                   Expanded(
-                                    flex: 3,
+                                    flex: 4,
                                     child: Padding(
                                       padding: const EdgeInsets.only(left: 14, top: 4),
                                       child: Column(
@@ -128,12 +133,27 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                                               textoverflow: TextOverflow.ellipsis
                                           ),
                                           SizedBox(height: 4.5,),
-                                          TextpoppinsMedium_16(
-                                              text: "Cont. Person : " + company.contactPerson, // Access company city
-                                              fontsize: 14,
-                                              color: Colors.black54,
-                                              maxline: 1,
-                                              textoverflow: TextOverflow.ellipsis
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.start,
+                                            crossAxisAlignment:CrossAxisAlignment.start,
+                                            children: [
+                                              TextpoppinsMedium_16(
+                                                  text: "Cont. Person: " , // Access company city
+                                                  fontsize: 14,
+                                                  color: Colors.black,
+                                                  maxline: 1,
+                                                  textoverflow: TextOverflow.ellipsis
+                                              ),
+                                              Flexible(
+                                                child: TextpoppinsMedium_16(
+                                                    text: company.contactPerson, // Access company city
+                                                    fontsize: 14,
+                                                    color: Colors.black54,
+                                                    maxline: 2,
+                                                    textoverflow: TextOverflow.visible
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                           SizedBox(
                                             height: 6,
@@ -141,13 +161,13 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                                           Row(
                                             children: [
                                               Container(
-                                                child: TextpoppinsMedium_16(text: company.preCompletionPercentage + "% " ,fontsize: 14),
+                                                child: TextpoppinsMedium_16(text: "Task progress : " ,fontsize: 14),
                                               ),
                                               Container(
                                                 child: SimpleAnimationProgressBar(
-                                                  height: 19,
+                                                  height: 15,
                                                   width: MediaQuery.of(context).size.width * 0.30,
-                                                  backgroundColor: Color(0xFFA4FCC0),
+                                                  backgroundColor: Color(0xFFFF5858),
                                                   foregrondColor: Color(0xFF34F771),
                                                   ratio: company.preCompletionPercentage != null ? double.tryParse(company.preCompletionPercentage) ?? 0.0 : 0.0,
                                                   direction: Axis.horizontal,
@@ -161,26 +181,45 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                                           SizedBox(
                                             height: 5,
                                           ),
-                                          company.preAuditSubmitted == "0"
-                                              ? Row(
+                                          // company.preAuditSubmitted == "0"
+                                          //     ? Row(
+                                          //
+                                          //       children: [
+                                          //         TextpoppinsMedium_16(
+                                          //           text: "Status ",
+                                          //           fontsize: 14,
+                                          //           color: Colors.black, // You can customize the color
+                                          //         ),
+                                          //         SizedBox(width: 5,),
+                                          //         TextpoppinsMedium_16(
+                                          //           text: "Not Submitted",
+                                          //           fontsize: 14,
+                                          //           color: Colors.red, // You can customize the color
+                                          //         ),
+                                          //       ],
+                                          //     ) : TextpoppinsMedium_16(
+                                          //   text: "Status : Submitted",
+                                          //   fontsize: 14,
+                                          //   color: Colors.green, // You can customize the color
+                                          // ),
 
-                                                children: [
-                                                  TextpoppinsMedium_16(
-                                                    text: "Status ",
-                                                    fontsize: 14,
-                                                    color: Colors.black, // You can customize the color
-                                                  ),
-                                                  SizedBox(width: 5,),
-                                                  TextpoppinsMedium_16(
-                                                    text: "Not Submitted",
-                                                    fontsize: 14,
-                                                    color: Colors.red, // You can customize the color
-                                                  ),
-                                                ],
-                                              ) : TextpoppinsMedium_16(
-                                            text: "Status : Submitted",
-                                            fontsize: 14,
-                                            color: Colors.green, // You can customize the color
+                                          Row(
+                                            children: [
+                                              TextpoppinsMedium_16(
+                                                          text: "Status ",
+                                                          fontsize: 14,
+                                                          color: Colors.black, // You can customize the color
+                                                        ),
+
+                                              SizedBox(
+                                                width: 10,
+                                              ),
+                                              
+                                              if(company.preCompletionPercentage!="0.00")
+                                              TextpoppinsMedium_16(text: company.preCompletionPercentage+"% Completed ")
+                                              else
+                                                Textpoppinslight_16(text: "Not Started",fontsize: 14,color: Colors.redAccent,)
+                                            ],
                                           ),
 
                                           SizedBox(height: 6),
@@ -192,46 +231,31 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                                   Expanded(
                                     flex: 1,
                                     child: Container(
-                                      height: 122,
-                                      decoration: const BoxDecoration(
+                                      height: 136,
+                                        decoration: const BoxDecoration(
                                         borderRadius: BorderRadius.only(
                                           topRight: Radius.circular(16),
                                           bottomRight: Radius.circular(16),
                                         ),
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.only(
-                                          topRight: Radius.circular(16),
-                                          bottomRight: Radius.circular(16),
-                                        ),
-                                        child: Stack(
-                                          children: [
-                                            Image.asset(
-                                              "assets/images/green_btn_bg.png",
-                                              fit: BoxFit.fill,
-                                              height:140,// Ensure it fits the container
-                                            ),
-
-                                            Positioned(
-                                              top:50,
-
-                                              left: 30,
-
-                                              child: Container(
-                                                height: 25,
-                                                width: 25,
-                                                child: Image.asset(
-                                                  "assets/images/right_btn_arrow.png",
-                                                  height: 20,
-
-                                                  // Set width according to your design// Adjust width as necessary
-                                               // This will ensure the image scales with the height
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                        gradient: LinearGradient(
+                                          colors: [Color(0xFF48965a), Color(0xFF9fad4e)],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.topRight,
                                         ),
                                       ),
+                                      child: Center(
+                                        child: Container(
+                                          height: 25,
+                                          width: 25,
+                                          child: Image.asset(
+                                            "assets/images/right_btn_arrow.png",
+                                            height: 20,
+                                    
+                                            // Set width according to your design// Adjust width as necessary
+                                            // This will ensure the image scales with the height
+                                          ),
+                                        ),
+                                      )
                                     ),
                                   )
                                 ],
@@ -241,6 +265,9 @@ class _CompaniesLocationState extends State<CompaniesLocation> {
                         );
                       },
                     ),
+                    SizedBox(
+                      height: 50,
+                    )
                   ],
                 ),
               ),

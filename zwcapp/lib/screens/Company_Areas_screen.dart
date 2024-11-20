@@ -11,8 +11,9 @@ import '../Model/Locationmodel.dart';
 import '../services/Companies_services.dart';
 
 class CompanyAreas extends StatefulWidget {
-  const CompanyAreas({super.key, required this.userid});
+  const CompanyAreas({super.key, required this.userid,required this.companyname});
   final String userid;
+  final String companyname;
 
   @override
   State<CompanyAreas> createState() => _CompanyAreasState();
@@ -82,7 +83,9 @@ class _CompanyAreasState extends State<CompanyAreas> {
                         height: 500,
                         child: Center(child: CircularProgressIndicator())) // Show loading indicator
                         : ListView.builder(
-                      shrinkWrap: true, // Makes the ListView take only the needed height
+                      shrinkWrap: true,
+                      physics: NeverScrollableScrollPhysics(),
+                      // Makes the ListView take only the needed height
                       itemCount: _LocationData!.data.length, // Access the length safely
                       itemBuilder: (context, index) {
                         var company = _LocationData!.data[index]; // Access company data safely

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zwcapp/screens/Dashboard_screen.dart';
+import 'package:zwcapp/screens/new_dashboard_design.dart';
 import 'customwidgets.dart'; // Import your custom Text widget
 import 'login.dart'; // Import the screen you are navigating to
 
@@ -43,7 +44,7 @@ class SplashScreenState extends State<SplashScreen> {
       if (isLoggedIn != null) {
         if (isLoggedIn) {
           Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => DashboardScreen()));
+              MaterialPageRoute(builder: (context) => NewDashboardDesign()));
         } else {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => Login()));
